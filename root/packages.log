@@ -1,0 +1,15 @@
+Thu Sep 22 13:30:24 CDT 2011 apt-get install joe curl lynx ipcalc gawk nmap tshark traceroute libnet-ip-perl cups-bsd gnuplot bc sshfs
+Fri Sep 30 12:35:32 CDT 2011 aptitude install git-core
+Tue Oct  4 09:22:53 CDT 2011 dpkg-query -l
+Mon Oct 10 17:01:11 CDT 2011 dpkg-query -L /usr/local/bin/ifconfig
+Mon Oct 10 17:01:18 CDT 2011 dpkg-query -l /usr/local/bin/ifconfig
+Mon Oct 10 17:01:26 CDT 2011 dpkg-query -l /sbin/ifconfig
+Mon Oct 10 17:01:39 CDT 2011 dpkg-query 
+Mon Oct 10 17:02:22 CDT 2011 dpkg-query --help
+Mon Oct 10 17:02:36 CDT 2011 dpkg-query -S /sbin/ifconfig
+Mon Oct 10 17:03:45 CDT 2011 dpkg-query -S /usr/bin/uptime
+Mon Oct 10 17:04:09 CDT 2011 dpkg-query -S /usr/bin/w
+Mon Oct 10 17:04:29 CDT 2011 dpkg-query -S /usr/bin/w
+Mon Oct 10 17:04:44 CDT 2011 dpkg-query -S /sbin/ifconfig
+Wed Oct 12 22:43:23 CDT 2011 dpkg-query -l
+Wed Oct 12 22:43:26 CDT 2011 dpkg-query -l

@@ -1,0 +1,41 @@
+#!/usr/bin/perl
+
+use strict;
+use Getopt::Long;
+
+my $d="\t";
+my $f="";
+my $r=0;
+GetOptions(
+	"d=s"=>\$d,
+	"f=s"=>\$f,
+	"r"=>\$r
+);
+while ( chomp(my $line=<STDIN>) ) {
+	@_ = ();
+	while ( 1 ) {
+		my $pos = index($line, $d);
+		do { push @_, $line; last; } if $pos < 0;
+		$_ = substr($line, 0, $pos);
+		push @_, $_;
+		substr($line, 0, $pos+1) = '';
+	}
+	my @a = ();
+	if ( $f ) {
+		foreach ( split /,/, $f ) {
+			if ( /^(\d+)?-(\d+)?$/ ) {
+				my ($a, $b) = ($1, $2);
+				$a--; $b--;
+				next if $a > $#_ || $b > $#_;
+				$a = 0 if $a < 0;
+				$b = $#_ if $b < 0;
+				push @a, @_[$a..$b];
+			} else {
+				push @a, $_[$_-1];
+			}
+		}
+	} else {
+		@a = @_;
+	}
+	print join("$d", ($r ? reverse @a : @a)), "\n";
+}

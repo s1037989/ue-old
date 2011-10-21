@@ -1,0 +1,42 @@
+#!/bin/sh
+
+MYUSER="root"
+MYPASS="password"
+MYSQL=`basename $0`
+DB=`echo $MYSQL | sed -e 's/mysql-//'`
+[ "$DB" = "mysqldump-cron" ] && { echo "Symlink to this script in cron with the filename 'mysql-databasename'"; exit; }
+[ ! -d /backup ] && { echo "/backup does not exist; create it"; exit; }
+
+echo "Backing up MySQL Database $DB"
+mkdir -p /backup/mysql
+if [ "$(date +%d)" = "01" ]; then
+    find /backup/mysql -mtime +4  -type f \
+        -name "$DB.[0-9][0-9][0-9][0-9]-[0-9][0-9].sql" \
+        -exec bzip2 {} \;
+    find /backup/mysql -mtime +365  -type f \
+        -name "$DB.*.bz2" \
+        -exec rm {} \;
+    mysqldump -u$MYUSER -p$MYPASS -c -e --default-character-set=utf8 --single-transaction --skip-set-charset --add-drop-database -B $DB > /backup/mysql/$DB.$(date +%Y-%m).sql
+fi
+if [ "$(date +%w)" -eq 6 ]; then
+    find /backup/mysql -mtime +4  -type f \
+        -name "$DB.[0-9][0-9][0-9][0-9]kw[0-9].sql" \
+        -exec bzip2 {} \;
+    find /backup/mysql -mtime +4  -type f \
+        -name "$DB.[0-9][0-9][0-9][0-9]kw[0-9][0-9].sql" \
+        -exec bzip2 {} \;
+    find /backup/mysql -mtime +90  -type f \
+        -name "$DB.*.bz2" \
+        -exec rm {} \;
+    mysqldump -u$MYUSER -p$MYPASS -c -e --default-character-set=utf8 --single-transaction --skip-set-charset --add-drop-database -B $DB > /backup/mysql/$DB.$(date +%Ykw%W).sql
+fi
+if true; then
+    find /backup/mysql -mtime +4  -type f \
+        -name "$DB.[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].sql" \
+        -exec bzip2 {} \;
+    find /backup/mysql -mtime +30  -type f \
+        -name "$DB.*.bz2" \
+        -exec rm {} \;
+    mysqldump -u$MYUSER -p$MYPASS -c -e --default-character-set=utf8 --single-transaction --skip-set-charset --add-drop-database -B $DB > /backup/mysql/$DB.$(date +%Y-%m-%d).sql
+fi
+#mysqldump -u $MYUSER -p$MYPASS -Q -a -c -f --add-drop-table --create-options $DB > /backup/mysql/$DB.$(date +%Y%m%d%H:%M:%S).sql

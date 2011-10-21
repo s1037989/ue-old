@@ -1,0 +1,18 @@
+#!/usr/bin/perl
+
+my $format = join("\t", map { '@'.('<'x($_-1)) } split /\D/, $ARGV[0])."\n";
+my @div = map { ('-'x($_)) } split /\D/, $ARGV[0];
+my $last = '';
+while ( <STDIN> ) {
+	@_ = split /\t/;
+	print swrite($format, @div)  if $last && $last ne $_[$ARGV[1]];
+	print swrite($format, @_);
+	$last = $_[$ARGV[1]] if $ARGV[1] =~ /^\d+$/;
+}
+
+sub swrite {
+	my $format = shift;
+	$^A = "";
+	formline($format,@_);
+	return $^A;
+}

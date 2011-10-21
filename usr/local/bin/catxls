@@ -1,0 +1,31 @@
+#!/usr/bin/perl
+
+use Spreadsheet::ParseExcel::Simple;
+use Date::Manip;
+
+die "Usage: $0 {file}[.xls]\n" unless $ARGV[0];
+$ARGV[0].='.xls' unless $ARGV[0]=~/.xls$/i;
+
+my $s=0;
+my $xls = Spreadsheet::ParseExcel::Simple->read($ARGV[0]);
+foreach my $sheet ( $xls->sheets ) {
+	$s++;
+	next if $ARGV[1] && $s != $ARGV[1];
+	# Remove header
+	$sheet->next_row if !$ENV{HEAD} && $sheet->has_data;
+	my $c=0;
+	while ( $sheet->has_data ) {
+		my $row = {};
+		local @_ = $sheet->next_row;
+		# Remove blank lines
+		next if join('', @_) =~ /^\s*$/;
+		foreach ( @_ ) {
+			s/^\s*"?\s*//;
+			s/\s*"?\s*$//;
+			s/\r?\n/;/g;
+		}
+		print join "\t", @_;
+		print "\n";
+		$c++;
+	}
+}
