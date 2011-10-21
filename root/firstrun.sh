@@ -5,7 +5,7 @@
 
 . /etc/profile.d/network-utils.sh
 apt-get update ; apt-get upgrade
-ssh-keygen -t rsa
+apt-get install $(grep install /root/packages.log | sed -e 's/^.*install //' | paste -s -d ' ')
 
 I=$(ls -1 /sys/class/net | grep eth | head -1)
 IP=$(ifconfig $(basename $I) | grep "inet addr" | gawk -F: '{print $2}' | gawk '{print $1}')
@@ -38,6 +38,8 @@ echo New IP: $IP
 [ "$I" -a "$IP" -a "$BC" -a "$NM" -a "$GW" ] && perl -pi -e "s/iface $I inet dhcp/iface $I inet static\n\taddress $IP\n\tnetmask $NM\n\tbroadcast $BC\n\tgateway $GW\n/" /etc/network/interfaces
 [ "$IP" -a "$2" ] && hostname $IP $2
 echo $1 > /etc/groupname
+ssh-keygen -t rsa
+cat /root/.ssh/id_rsa.pub > /root/.ssh/authorized_keys
 date +"%Y-%m-%d" > /etc/ubuntu-firstrun
 
 /usr/local/lib/cemosshe/cemosshe
