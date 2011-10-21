@@ -38,10 +38,11 @@ echo New IP: $IP
 [ "$I" -a "$IP" -a "$BC" -a "$NM" -a "$GW" ] && perl -pi -e "s/iface $I inet dhcp/iface $I inet static\n\taddress $IP\n\tnetmask $NM\n\tbroadcast $BC\n\tgateway $GW\n/" /etc/network/interfaces
 [ "$IP" -a "$2" ] && hostname $IP $2
 echo $1 > /etc/groupname
+date +"%Y-%m-%d" > /etc/ubuntu-firstrun
+
 /usr/local/lib/cemosshe/cemosshe
 mkdir -p /backup/snapshots
 [ ! -e /backup/snapshots/.config ] && echo "NOPARTCHECK=1" > /backup/snapshots/.config
 /usr/local/lib/snarsshe/snarsshe /backup/snapshots/$1/$2
-date +"%Y-%m-%d" > /etc/ubuntu-firstrun
 
 echo ; ifconfig
