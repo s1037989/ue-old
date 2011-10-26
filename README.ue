@@ -1,0 +1,48 @@
+-----------------------------------------------------------------------
+      			ue  v11.10.26
+ 	   2011- by Stefan Adams <stefan@cogentinnovators.com>
+-----------------------------------------------------------------------
+
+CeMoSShE (CEntral MOnitoring in a Simple SHell Environment) is a simple,
+lightweight (both in size and system requirements) server monitoring
+package designed for secure and in-depth monitoring of a handful of
+typical/critical internet systems.
+
+Requirements for CeMoSSHe:
+	* Unix Shell (Bourne-SH, BASH, Busybox)
+	* standard Unix text tools (fgrep, cut, head, mail, time, date,
+	  paste, sed...)
+	* "netcat" networking tool
+	* curl >= 7.18.0
+	
+Updates will be available at   http://www.cogent-it.com/software/ue/
+Please check there for updates prior to submitting patches!
+
+There currently NO user/developer mailing list available. Stay tuned.
+
+For bug reports and suggestions or if you just want to talk to me
+please contact me at stefan@cogentinnovators.com
+
+
+-----------------------------------------------------------------------
+Shortcut: Distributable under  GPL
+-----------------------------------------------------------------------
+Copyright (C) 2011- Stefan Adams
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or (at
+your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+USA. or on their website http://www.gnu.org/copyleft/gpl.html
+
+-----------------------------------------------------------------------
+
