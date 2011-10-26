@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 [ -z "$1" ] && { echo "Usage: $0 code fqdn [force]"; exit; }
 [ -z "$2" ] && { echo "Usage: $0 code fqdn [force]"; exit; }

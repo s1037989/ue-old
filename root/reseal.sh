@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 [ -z "$1" ] && { echo "Usage: $0 reseal"; exit; }
 . /etc/profile.d/z-local.sh

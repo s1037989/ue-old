@@ -129,13 +129,13 @@ fixcron() {
 	[ -x /etc/init.d/cron ] && /etc/init.d/cron restart
 	[ -x /etc/init.d/crond ] && /etc/init.d/crond restart
 }
-aptitude() {
-	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
-	/usr/bin/aptitude "$@"
-}
 apt-get() {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
 	/usr/bin/apt-get "$@"
+}
+aptitude() {
+	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
+	/usr/bin/aptitude "$@"
 }
 dpkg() {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
