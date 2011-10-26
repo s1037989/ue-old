@@ -6,7 +6,7 @@ VI=`which vi`
 [ "$JOE" ] && EDITOR=$JOE || EDITOR=$VI
 HISTTIMEFORMAT="%Y%m%d - %H:%M:%S "
 alias dir="ls"
-function resetuser {
+resetuser() {
 	[ -z "$1" ] && {
 		echo Usage: $FUNCNAME uid '[uid...]';
 		return 1
@@ -63,22 +63,22 @@ alias unix2dos='perl -pi -e "s/\n/\r\n/"'
 alias dos2unix='perl -pi -e "s/\r\n/\n/"'
 alias striplf='paste -s -d " "'
 alias epochs=sec2date
-function sec2date { date -d "1970-01-01 $1 seconds GMT"; }
+sec2date() { date -d "1970-01-01 $1 seconds GMT"; }
 alias epochd=days2date
-function days2date { date -d "1970-01-01 $1 days"; }
-function doy { [ "$1" ] && d="-d $1"; date $d +%j; }
-function now { date +%s; }
+days2date() { date -d "1970-01-01 $1 days"; }
+doy() { [ "$1" ] && d="-d $1"; date $d +%j; }
+now() { date +%s; }
 alias df='df -h'
 alias h2d='printf "%d" 0x${1}'
 alias d2h='printf "%x" ${1}'
-function d2a { perl -e "print chr '$1'"; }
-function a2d { perl -e "print ord '$1'"; }
-function a2h { IFS=''; for i in $@; do perl -e "foreach ( split //, '$i' ) { print sprintf('%x ', ord qq{\$_}) }"; done; unset IFS; }
-function h2a { for i in $@; do if [ "$i" != "00" ]; then perl -e "print chr \$ARGV[0]" $(printf "%d" 0x${i}); fi; done; }
-function db64 { perl -MMIME::Base64 -e 'print decode_base64($ARGV[0]||<STDIN>), "\n"' "$1"; }
-function eb64 { perl -MMIME::Base64 -e 'print encode_base64($ARGV[0]||<STDIN>), "\n"' "$1"; }
-function diskuuid { echo See blkid; return; for i in $(find /dev/disk/by-uuid/ -type l); do j=$(basename $(readlink $i)); if [ "$1" == "$j" ]; then basename $i; fi; done; }
-function maketiny {
+d2a() { perl -e "print chr '$1'"; }
+a2d() { perl -e "print ord '$1'"; }
+a2h() { IFS=''; for i in $@; do perl -e "foreach ( split //, '$i' ) { print sprintf('%x ', ord qq{\$_}) }"; done; unset IFS; }
+h2a() { for i in $@; do if [ "$i" != "00" ]; then perl -e "print chr \$ARGV[0]" $(printf "%d" 0x${i}); fi; done; }
+db64() { perl -MMIME::Base64 -e 'print decode_base64($ARGV[0]||<STDIN>), "\n"' "$1"; }
+eb64() { perl -MMIME::Base64 -e 'print encode_base64($ARGV[0]||<STDIN>), "\n"' "$1"; }
+diskuuid() { echo See blkid; return; for i in $(find /dev/disk/by-uuid/ -type l); do j=$(basename $(readlink $i)); if [ "$1" == "$j" ]; then basename $i; fi; done; }
+maketiny() {
 	if [ -d /etc/tinydns/root ]; then
 		cd /etc/tinydns/root;
 	elif [ -d /service/tinydns/root ]; then
@@ -95,32 +95,32 @@ function maketiny {
 	make;
 	cd - 2>&1 >/dev/null;
 }
-function findonday {
+findonday() {
 	path=$1
 	day=$2
 	next=$(date -d "$day + 1 day")
 	find "$path" -type f -newermt "$day" ! -newermt "$next"
 }
-function findnotonday {
+findnotonday() {
 	path=$1
 	day=$2
 	next=$(date -d "$day + 1 day")
 	{ find "$path" -type f -newermt "$day" ! -newermt "$next" ; find "$path" -type f; } | sort | uniq -u
 }
-function highlight {
+highlight() {
         IFS=$'\n'
         while read i; do
                 echo -e $(env GREP="$1" perl -pi -e 's/\n/\\n/g;s/($ENV{GREP})/\\033[31m$1\\033[0m/g')
         done
         unset IFS
 }
-function makepatch {
+makepatch() {
 	[ -z "$2" ] && { echo Usage: $FUNCNAME original new; return; }
 	echo Usage: $FUNCNAME original new
 	diff -urN $1 $2 > $2.patch
 	echo Patch saved as $2.patch
 }
-function fixcron {
+fixcron() {
 	chmod 0644 /etc/crontab
 	chmod 0754 /etc/cron.d
 	chmod 0644 /etc/cron.d/*
@@ -129,47 +129,47 @@ function fixcron {
 	[ -x /etc/init.d/cron ] && /etc/init.d/cron restart
 	[ -x /etc/init.d/crond ] && /etc/init.d/crond restart
 }
-function aptitude {
+aptitude() {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
 	/usr/bin/aptitude "$@"
 }
-function apt-get {
+apt-get() {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
 	/usr/bin/apt-get "$@"
 }
-function dpkg {
+dpkg() {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
 	/usr/bin/dpkg "$@"
 }
-function dpkg-deb {
+dpkg-deb() {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
 	/usr/bin/dpkg-deb "$@"
 }
-function dpkg-divert {
+dpkg-divert() {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
 	/usr/bin/dpkg-divert "$@"
 }
-function dpkg-preconfigure {
+dpkg-preconfigure() {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
 	/usr/bin/dpkg-preconfigure "$@"
 }
-function dpkg-query {
+dpkg-query() {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
 	/usr/bin/dpkg-query "$@"
 }
-function dpkg-reconfigure {
+dpkg-reconfigure() {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
 	/usr/bin/dpkg-reconfigure "$@"
 }
-function dpkg-split {
+dpkg-split() {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
 	/usr/bin/dpkg-split "$@"
 }
-function dpkg-statoverride {
+dpkg-statoverride() {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
 	/usr/bin/dpkg-statoverride "$@"
 }
-function dpkg-trigger {
+dpkg-trigger() {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
 	/usr/bin/dpkg-trigger "$@"
 }
