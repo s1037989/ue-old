@@ -1,7 +1,8 @@
 #!/bin/sh
 
-[ -z "$1" ] && { echo "Usage: $0 code fqdn"; exit; }
-[ -z "$2" ] && { echo "Usage: $0 code fqdn"; exit; }
+[ -z "$1" ] && { echo "Usage: $0 code fqdn [force]"; exit; }
+[ -z "$2" ] && { echo "Usage: $0 code fqdn [force]"; exit; }
+[ -e /etc/ubuntu-firstrun -a -z "$3" ] && { echo -n "Already executed: "; cat /etc/ubuntu-firstrun; exit; }
 
 . /etc/profile.d/network-utils.sh
 apt-get update ; apt-get upgrade
@@ -21,9 +22,7 @@ if [ "$DHCP_RANGE" ]; then
 	echo Found DHCP Range: $DHCP_RANGE
 else
 	echo "Cannot look up DHCP Range, what is it? [$NW] "; read DHCP_RANGE
-	if [ -z "$DHCP_RANGE" ]; then
-		DHCP_RANGE="$NW"
-	fi
+	[ -z "$DHCP_RANGE" ] && DHCP_RANGE="$NW"
 fi
 if [ $(iplist $DHCP_RANGE | wc -l) -gt 1 ]; then
 	iplist $DHCP_RANGE $NW > /tmp/$$
