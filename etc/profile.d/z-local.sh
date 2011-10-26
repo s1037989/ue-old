@@ -1,7 +1,9 @@
 function cd { builtin cd "$@"; echo $(pwd) > $HOME/.pwd; }
 test -f "$HOME/.pwd" || echo $(pwd) > $HOME/.pwd
 cd "$(< $HOME/.pwd)"
-EDITOR="/usr/bin/joe"
+JOE=`which joe`
+VI=`which vi`
+[ "$JOE" ] && EDITOR=$JOE || EDITOR=$VI
 HISTTIMEFORMAT="%Y%m%d - %H:%M:%S "
 alias dir="ls"
 function resetuser {
@@ -17,16 +19,16 @@ function resetuser {
 			if [[ $h =~ ^/(data/users|home) ]]; then
 				/bin/echo $1 : $u : $g : $h;
 				/bin/mkdir -p $h;
-				/bin/mkdir -p $h/Maildir;
+				#/bin/mkdir -p $h/Maildir;
 				/bin/chown -RLP $u.$g $h;
 				/bin/chmod 0701 $h;
-				/bin/chmod 0700 $h/Maildir;
-				/bin/mkdir -p $h/mail;
-				/bin/chown $u.mail $h/mail;
-				/bin/chmod 0770 $h/mail;
-				/bin/touch $h/mail/mbox;
-				/bin/chown $u.mail $h/mail/mbox;
-				/bin/chmod 0660 $h/mail/mbox;
+				#/bin/chmod 0700 $h/Maildir;
+				#/bin/mkdir -p $h/mail;
+				#/bin/chown $u.mail $h/mail;
+				#/bin/chmod 0770 $h/mail;
+				#/bin/touch $h/mail/mbox;
+				#/bin/chown $u.mail $h/mail/mbox;
+				#/bin/chmod 0660 $h/mail/mbox;
 			fi;
 		fi
 		shift || break
@@ -111,24 +113,6 @@ function highlight {
                 echo -e $(env GREP="$1" perl -pi -e 's/\n/\\n/g;s/($ENV{GREP})/\\033[31m$1\\033[0m/g')
         done
         unset IFS
-}
-function getnic {
-	if [ -z "$1" ]; then
-		echo -n "Usage: $FUNCNAME "; for i in /sys/class/net/*; do basename $i; done | paste -s -d '|';
-	else
-		driver=$(readlink -f /sys/class/net/$1/device/driver);
-		driver=${driver##*/};
-		echo $driver;
-	fi
-}
-function nomartians {
-	if [ -z "$1" ]; then
-		for i in /proc/sys/net/ipv4/conf/*; do
-			echo 0 > $i/log_martians
-		done
-	else
-		echo 0 > /proc/sys/net/ipv4/conf/$iface/log_martians
-	fi
 }
 function makepatch {
 	[ -z "$2" ] && { echo Usage: $FUNCNAME original new; return; }

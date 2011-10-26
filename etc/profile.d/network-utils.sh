@@ -1,5 +1,5 @@
-find /tmp -name checkip -mtime +1 -exec rm -f /tmp/checkip \;
-[ -e /tmp/checkip ] || curl http://checkip.cog-ent.com 2>/dev/null > /tmp/checkip
+[ ! -e /tmp/checkip ] && touch -d "1970-01-01 00:00:00" /tmp/checkip
+find /tmp -name checkip -mtime +7 -exec wget -qO /tmp/checkip http://checkip.cog-ent.com \;
 
 ifconfig () {
 
@@ -86,6 +86,7 @@ validip() {
 
 hostname () {
 
+   echo "This is hostname().  Use /bin/hostname if you prefer."
    [ -z "$2" ] && { /bin/hostname $@; return; }
    unset ip; unset fqdn
    validip $(getip $1) && ip=$(getip $1) || fqdn=$1
@@ -110,9 +111,26 @@ getnic() {
             [ "${driver##*/}" ] && echo ${driver##*/};
         fi
     done;
+    #if [ -z "$1" ]; then
+    #    echo -n "Usage: $FUNCNAME "; for i in /sys/class/net/*; do basename $i; done | paste -s -d '|';
+    #else
+    #    driver=$(readlink -f /sys/class/net/$1/device/driver);
+    #    driver=${driver##*/};
+    #    echo $driver;
+    #fi
 
 } 
 
 iplist() {
 	perl -MNet::IP -e 'foreach ( split /,/, join(",", @ARGV) ) { my $ip = new Net::IP($_) || die "Usage: iplist iprange\n"; do { print $ip->ip(), "\n" } while ++$ip; }' $@
+}
+
+nomartians() {
+        if [ -z "$1" ]; then
+                for i in /proc/sys/net/ipv4/conf/*; do
+                        echo 0 > $i/log_martians
+                done
+        else
+                echo 0 > /proc/sys/net/ipv4/conf/$iface/log_martians
+        fi
 }
