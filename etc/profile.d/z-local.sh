@@ -129,47 +129,47 @@ function fixcron {
 	[ -x /etc/init.d/cron ] && /etc/init.d/cron restart
 	[ -x /etc/init.d/crond ] && /etc/init.d/crond restart
 }
-function apt-get {
-	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
-	/usr/bin/apt-get $@
-}
 function aptitude {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
-	/usr/bin/aptitude $@
+	/usr/bin/aptitude "$@"
+}
+function apt-get {
+	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
+	/usr/bin/apt-get "$@"
 }
 function dpkg {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
-	/usr/bin/dpkg $@
+	/usr/bin/dpkg "$@"
 }
 function dpkg-deb {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
-	/usr/bin/dpkg-deb $@
+	/usr/bin/dpkg-deb "$@"
 }
 function dpkg-divert {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
-	/usr/bin/dpkg-divert $@
+	/usr/bin/dpkg-divert "$@"
 }
 function dpkg-preconfigure {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
-	/usr/bin/dpkg-preconfigure $@
+	/usr/bin/dpkg-preconfigure "$@"
 }
 function dpkg-query {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
-	/usr/bin/dpkg-query $@
+	/usr/bin/dpkg-query "$@"
 }
 function dpkg-reconfigure {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
-	/usr/bin/dpkg-reconfigure $@
+	/usr/bin/dpkg-reconfigure "$@"
 }
 function dpkg-split {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
-	/usr/bin/dpkg-split $@
+	/usr/bin/dpkg-split "$@"
 }
 function dpkg-statoverride {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
-	/usr/bin/dpkg-statoverride $@
+	/usr/bin/dpkg-statoverride "$@"
 }
 function dpkg-trigger {
 	echo "$(date) $FUNCNAME $@" >> $HOME/packages.log
-	/usr/bin/dpkg-trigger $@
+	/usr/bin/dpkg-trigger "$@"
 }
