@@ -1,0 +1,27 @@
+FQDN=$(hostname -f)
+INTIP=$(/bin/hostname -i)
+DOMAIN=$(/bin/hostname -d)
+NETWORK=$(echo $INTIP | cut -d. -f1-3 | awk -F. '{print $1"."$2"."$3}')
+REVERSE=$(echo $INTIP | cut -d. -f1-3 | awk -F. '{print $3"."$2"."$1}')
+echo $FQDN - $INTIP
+
+[ -d /etc/tinydns ] || tinydns-conf tinydns dnslog /etc/tinydns 127.0.0.1
+[ -d /etc/dnscache ] || tdnscache-conf dnscache dnslog /etc/dnscache $INTIP
+cat <<EOF > /etc/tinydns/root/data
+.$DOMAIN:$INTIP:a:3600
+.$REVERSE.in-addr.arpa:$INTIP:a:259200
+=$HOST.$DOMAIN:$INTIP:3600
++$DOMAIN:$INTIP:3600
++www.$DOMAIN:$INTIP:3600
++ldap.$DOMAIN:$INTIP:3600
++mail.$DOMAIN:$INTIP:3600
+@$DOMAIN:$INTIP:mail.$DOMAIN:10:3600
+EOF
+maketiny
+echo 1 > /etc/service/dnscache/env/FORWARDONLY
+touch /etc/dnscache/root/ip/$NETWORK
+echo -e "208.67.222.222\n208.67.220.220" > /etc/service/dnscache/root/servers/\@
+echo "127.0.0.1" > /etc/service/dnscache/root/servers/$DOMAIN
+ln -s /etc/dnscache /etc/service
+ln -s /etc/tinydns /etc/service
+svstat /etc/service/*
