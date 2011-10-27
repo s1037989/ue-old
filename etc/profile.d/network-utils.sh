@@ -5,8 +5,8 @@ ifconfig () {
 
    if [ $# -le 1 ]; then
        [ -s /etc/groupname ] && echo Group: $(</etc/groupname)
-       echo Hostname: $(hostname)
-       echo Domainname: $(hostname -d)
+       echo Hostname: $(/bin/hostname)
+       echo Domainname: $(/bin/hostname -d)
        echo Default route: $(route -n | grep ^0.0.0.0 | perl -pi -e 'split /\s+/; $_=$_[1]') \($(route -n | grep ^0.0.0.0 | perl -pi -e 'split /\s+/; $_=$_[-1]')\)
        echo DNS Servers: $(grep nameserver /etc/resolv.conf | perl -pi -e 'split /\s+/; $_="$_[-1]\n"' | paste -s -d ' ')
        echo Public Route: $([ -e /tmp/checkip ] && cat /tmp/checkip || echo 'Error getting IP')
@@ -18,6 +18,7 @@ ifconfig () {
            zone=$(zones $iface)
            zone="$zone     ";
            zone=${zone:0:5};
+           [ "$zone" = "     " ] && zone=" N/A "
            if [ "$driver" -o "$zone" ]; then
                /sbin/ifconfig $iface | sed -r "1i$driver Zone:$zone" | sed -n -e '/^eth/{=;x;1!p;g;$!N;p;D;}' -e h | perl -pi -e 's/^\d+//';
            else
