@@ -25,7 +25,7 @@ I=$(ls -1 /sys/class/net | grep eth | head -1)
 IP=$(/sbin/ifconfig $(basename $I) | grep "inet addr" | gawk -F: '{print $2}' | gawk '{print $1}')
 BC=$(/sbin/ifconfig $(basename $I) | grep "inet addr" | gawk -F: '{print $3}' | gawk '{print $1}')
 NM=$(/sbin/ifconfig $(basename $I) | grep "inet addr" | gawk -F: '{print $4}' | gawk '{print $1}')
-NW=$(/usr/bin/ipcalc -nb $IP/$NM | grep ^Network: | perl -pi -e 's/\w+:\s+//')
+NW=$(/usr/bin/ipcalc -nb $IP/$NM | grep ^Network: | perl -pi -e 's/^\w+:\s+|\s+$//g')
 GW=$(/sbin/route -n | grep "^0.0.0.0" | sed 's/ \+/\t/g' | cut -f 2)
 DHCP_RANGE=$(grep dhcp_range /tmp/dhclient.env | uniq | head -1 | cut -d= -f2)
 
@@ -34,7 +34,8 @@ echo Current IP: $CURIP
 if [ "$DHCP_RANGE" ]; then
     echo Found DHCP Range: $DHCP_RANGE
 else
-    echo -n "Cannot look up DHCP Range, what is it? [$NW] "; read DHCP_RANGE
+    echo "Configuring a static IP address but cannot look up the DHCP Range to choose an IP outside of that pool."
+    echo -n "Enter the DHCP pool range for this network to find and use an IP not in the pool or enter a single IP to use that. [$NW]  "; read DHCP_RANGE
     [ -z "$DHCP_RANGE" ] && DHCP_RANGE="$NW"
 fi
 if [ $(iplist $DHCP_RANGE | wc -l) -gt 1 ]; then
@@ -65,6 +66,7 @@ chmod +t /backup/snapshots/$1/$2
 rm -f /tmp/{cemosshe,snarsshe}.tar.gz
 fixcron
 
+echo -e "\nChange password for user 'local'"
 passwd local
 
 echo ; ifconfig
