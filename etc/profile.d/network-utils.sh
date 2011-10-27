@@ -1,5 +1,5 @@
 [ ! -e /tmp/checkip ] && touch -d "1970-01-01 00:00:00" /tmp/checkip
-find /tmp -name checkip -mtime +7 -exec wget -qO /tmp/checkip http://checkip.cog-ent.com \;
+find /tmp -maxdepth 1 -name checkip -mtime +7 -exec wget -qO /tmp/checkip http://checkip.cog-ent.com \;
 
 ifconfig () {
 
