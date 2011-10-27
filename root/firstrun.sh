@@ -45,5 +45,8 @@ date +"%Y-%m-%d" > /etc/ubuntu-firstrun
 /usr/local/lib/snarsshe/snarsshe.install
 mkdir -p /backup/snapshots/$1/$2
 chmod +t /backup/snapshots/$1/$2
+fixcron
+
+passwd local
 
 echo ; ifconfig
