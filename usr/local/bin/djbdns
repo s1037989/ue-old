@@ -1,12 +1,28 @@
-FQDN=$(hostname -f)
+FQDN=$(/bin/hostname -f)
 INTIP=$(/bin/hostname -i)
 DOMAIN=$(/bin/hostname -d)
 NETWORK=$(echo $INTIP | cut -d. -f1-3 | awk -F. '{print $1"."$2"."$3}')
 REVERSE=$(echo $INTIP | cut -d. -f1-3 | awk -F. '{print $3"."$2"."$1}')
 echo $FQDN - $INTIP
 
+cat <<EOF > /etc/init/svscan.conf
+# svscan - daemontools
+#
+# This service starts daemontools from the point the system is
+# started until it is shut down again.
+
+start on runlevel [123456]
+stop on shutdown
+
+respawn
+exec /usr/bin/svscanboot
+EOF
+useradd -M -r -d /dev/null -s /sbin/nologin tinydns
+useradd -M -r -d /dev/null -s /sbin/nologin dnslog
+useradd -M -r -d /etc/syncdns -s /sbin/nologin syncdns
+useradd -M -r -d /dev/null -s /sbin/nologin dnscache
 [ -d /etc/tinydns ] || tinydns-conf tinydns dnslog /etc/tinydns 127.0.0.1
-[ -d /etc/dnscache ] || tdnscache-conf dnscache dnslog /etc/dnscache $INTIP
+[ -d /etc/dnscache ] || dnscache-conf dnscache dnslog /etc/dnscache $INTIP
 cat <<EOF > /etc/tinydns/root/data
 .$DOMAIN:$INTIP:a:3600
 .$REVERSE.in-addr.arpa:$INTIP:a:259200
@@ -17,11 +33,12 @@ cat <<EOF > /etc/tinydns/root/data
 +mail.$DOMAIN:$INTIP:3600
 @$DOMAIN:$INTIP:mail.$DOMAIN:10:3600
 EOF
-maketiny
-echo 1 > /etc/service/dnscache/env/FORWARDONLY
+echo 1 > /etc/dnscache/env/FORWARDONLY
+touch /etc/dnscache/root/ip/127.0.0.1
 touch /etc/dnscache/root/ip/$NETWORK
-echo -e "208.67.222.222\n208.67.220.220" > /etc/service/dnscache/root/servers/\@
-echo "127.0.0.1" > /etc/service/dnscache/root/servers/$DOMAIN
+echo -e "208.67.222.222\n208.67.220.220" > /etc/dnscache/root/servers/\@
+echo "127.0.0.1" > /etc/dnscache/root/servers/$DOMAIN
 ln -s /etc/dnscache /etc/service
 ln -s /etc/tinydns /etc/service
 svstat /etc/service/*
+maketiny
