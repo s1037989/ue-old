@@ -7,10 +7,12 @@
 [ -e /etc/ubuntu-firstrun -a -z "$3" ] && { echo -n "Already executed: "; cat /etc/ubuntu-firstrun; exit; }
 
 . /etc/profile.d/network-utils.sh
+. /etc/profile.d/z-local.sh
 
 if [ ! -e /tmp/ue.tar.gz ]; then
     wget -O /tmp/ue.tar.gz http://www.cogent-it.com/software/ue/ue.tar.gz
     [ -e /tmp/ue.tar.gz -a -s /tmp/ue.tar.gz ] && tar xf /tmp/ue.tar.gz -C /
+    chown -R local.local /home/local
     $0 "$@"
     exit
 fi
