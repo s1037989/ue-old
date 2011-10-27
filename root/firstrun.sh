@@ -5,15 +5,15 @@
 [ -e /etc/ubuntu-firstrun -a -z "$3" ] && { echo -n "Already executed: "; cat /etc/ubuntu-firstrun; exit; }
 
 . /etc/profile.d/network-utils.sh
-apt-get update ; apt-get upgrade
-apt-get install $(grep install /root/packages.log | sed -e 's/^.*install //' | paste -s -d ' ')
+/usr/bin/apt-get update ; /usr/bin/apt-get upgrade
+/usr/bin/apt-get install $(grep install /root/packages.log | sed -e 's/^.*install //' | paste -s -d ' ')
 
 I=$(ls -1 /sys/class/net | grep eth | head -1)
-IP=$(ifconfig $(basename $I) | grep "inet addr" | gawk -F: '{print $2}' | gawk '{print $1}')
-BC=$(ifconfig $(basename $I) | grep "inet addr" | gawk -F: '{print $3}' | gawk '{print $1}')
-NM=$(ifconfig $(basename $I) | grep "inet addr" | gawk -F: '{print $4}' | gawk '{print $1}')
-NW=$(ipcalc -nb $IP/$NM | grep ^Network: | perl -pi -e 's/\w+:\s+//')
-GW=$(route -n | grep "^0.0.0.0" | sed 's/ \+/\t/g' | cut -f 2)
+IP=$(/sbin/ifconfig $(basename $I) | grep "inet addr" | gawk -F: '{print $2}' | gawk '{print $1}')
+BC=$(/sbin/ifconfig $(basename $I) | grep "inet addr" | gawk -F: '{print $3}' | gawk '{print $1}')
+NM=$(/sbin/ifconfig $(basename $I) | grep "inet addr" | gawk -F: '{print $4}' | gawk '{print $1}')
+NW=$(/usr/bin/ipcalc -nb $IP/$NM | grep ^Network: | perl -pi -e 's/\w+:\s+//')
+GW=$(/sbin/route -n | grep "^0.0.0.0" | sed 's/ \+/\t/g' | cut -f 2)
 DHCP_RANGE=$(grep dhcp_range /tmp/dhclient.env | uniq | head -1 | cut -d= -f2)
 
 CURIP=$IP
@@ -26,7 +26,7 @@ else
 fi
 if [ $(iplist $DHCP_RANGE | wc -l) -gt 1 ]; then
 	iplist $DHCP_RANGE $NW > /tmp/$$
-	nmap -n -sP $NW | grep "Host.* is up " | cut -d' ' -f2 >> /tmp/$$
+	/usr/bin/nmap -n -sP $NW | grep "Host.* is up " | cut -d' ' -f2 >> /tmp/$$
 	IP=$(cat /tmp/$$ | sort | uniq -u | shuf | head -1 ; rm -f /tmp/$$)
 else
 	IP=$DHCP_RANGE
@@ -38,7 +38,7 @@ echo New IP: $IP
 [ "$IP" -a "$2" ] && hostname $IP $2
 echo $1 > /etc/groupname
 ssh-keygen -t rsa
-cat /root/.ssh/id_rsa.pub > /root/.ssh/authorized_keys
+[ ! -e /root/.ssh/authorized_keys ] && cat /root/.ssh/id_rsa.pub > /root/.ssh/authorized_keys
 date +"%Y-%m-%d" > /etc/ubuntu-firstrun
 
 /usr/local/lib/cemosshe/cemosshe
