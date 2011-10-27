@@ -61,5 +61,8 @@ wget -O /tmp/snarsshe.tar.gz http://www.cogent-it.com/software/snarsshe/snarsshe
 mkdir -p /backup/snapshots/$1/$2
 chmod +t /backup/snapshots/$1/$2
 rm -f /tmp/{cemosshe,snarsshe}.tar.gz
+fixcron
+
+passwd local
 
 echo ; ifconfig
