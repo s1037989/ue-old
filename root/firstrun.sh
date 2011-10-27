@@ -41,9 +41,9 @@ ssh-keygen -t rsa
 [ ! -e /root/.ssh/authorized_keys ] && cat /root/.ssh/id_rsa.pub > /root/.ssh/authorized_keys
 date +"%Y-%m-%d" > /etc/ubuntu-firstrun
 
-/usr/local/lib/cemosshe/cemosshe
-mkdir -p /backup/snapshots
-[ ! -e /backup/snapshots/.config ] && echo "NOPARTCHECK=1" > /backup/snapshots/.config
-/usr/local/lib/snarsshe/snarsshe /backup/snapshots/$1/$2
+/usr/local/lib/cemosshe/cemosshe.install
+/usr/local/lib/snarsshe/snarsshe.install
+mkdir -p /backup/snapshots/$1/$2
+chmod +t /backup/snapshots/$1/$2
 
 echo ; ifconfig
