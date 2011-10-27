@@ -11,7 +11,7 @@
 
 if [ ! -e /tmp/ue.tar.gz ]; then
     wget -O /tmp/ue.tar.gz http://www.cogent-it.com/software/ue/ue.tar.gz
-    [ -e /tmp/ue.tar.gz -a -s /tmp/ue.tar.gz ] && tar xf /tmp/ue.tar.gz -C /
+    [ -e /tmp/ue.tar.gz -a -s /tmp/ue.tar.gz ] && tar xf /tmp/ue.tar.gz --strip-components=1 -C /
     chown -R local.local /home/local
     $0 "$@"
     exit
