@@ -21,7 +21,7 @@ echo Current IP: $CURIP
 if [ "$DHCP_RANGE" ]; then
 	echo Found DHCP Range: $DHCP_RANGE
 else
-	echo "Cannot look up DHCP Range, what is it? [$NW] "; read DHCP_RANGE
+	echo -n "Cannot look up DHCP Range, what is it? [$NW] "; read DHCP_RANGE
 	[ -z "$DHCP_RANGE" ] && DHCP_RANGE="$NW"
 fi
 if [ $(iplist $DHCP_RANGE | wc -l) -gt 1 ]; then
